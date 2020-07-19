@@ -26,7 +26,11 @@ nunjucks.configure("views", {
 });
 
 app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use("/", express.static(path.join(__dirname, "public"))); // '/'생략가능
+app.use("/img", express.static(path.join(__dirname, "uploads")));
+// 해커가 서버에서 경로를 쉽게 추적하지 못하도록 서버에선 uploads파일이지만
+// 프런트에선 img파일로 접근해야함 public의 main.css는 '/'이고 생략가능
+// /main.css, /img/blah.jpg 등 이 과정을 express.static 미들웨어 이용
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -46,6 +50,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
+app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
 

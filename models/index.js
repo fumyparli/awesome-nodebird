@@ -30,7 +30,7 @@ db.User.belongsToMany(db.User, {
 });
 db.User.belongsToMany(db.User, {
     through: "Follow",
-    as: "Following",
+    as: "Followings",
     foreignKey: "followerId",
 });
 

@@ -24,7 +24,7 @@
             <div>
                 <label id="img-label" for="img">사진 업로드</label>
                 <input id="img" type="file" accept="image/*" />
-                <button id="twit-btn" type="submit" class="btn">짹짹</button>
+                <button id="twit-btn" type="submit" class="btn">등록</button>
             </div>
         </form>
     </div>
@@ -38,12 +38,12 @@
         <div class="twit">
             <input
                 type="hidden"
-                value="{{twit.User.id}}"
+                value="{{twit.user.id}}"
                 class="twit-user-id"
             />
             <input type="hidden" value="{{twit.id}}" class="twit-id" />
-            <div class="twit-author">{{twit.User.nick}}</div>
-            {% if not followerIdList.includes(twit.User.id) and twit.User.id !==
+            <div class="twit-author">{{twit.user.nick}}</div>
+            {% if not followerIdList.includes(twit.user.id) and twit.user.id !==
             user.id %}
             <button class="twit-follow">팔로우하기</button>
             {% endif %}
@@ -60,8 +60,9 @@
     if (document.getElementById("img")) {
         document.getElementById("img").addEventListener("change", function (e) {
             const formData = new FormData();
-            console.log(this, this.files);
             formData.append("img", this.files[0]);
+            // 아무리봐도 여기 왜 file 대신 files[0]인지 모르겠음
+            // 그리고 files 어디서 튀어나온건지도 모르겠음 제로초 오빠한테 ㄲ
             axios
                 .post("/post/img", formData)
                 .then((res) => {
@@ -77,10 +78,11 @@
     }
     document.querySelectorAll(".twit-follow").forEach(function (tag) {
         tag.addEventListener("click", function () {
-            const myId = document.querySelector("#my-id");
+            const myId = document.querySelector("#my-id").value;
             if (myId) {
-                const userId = tag.parentNode.querySelector(".twit-user-id")
-                    .value;
+                const userId = parseInt(
+                    tag.parentNode.querySelector(".twit-user-id").value
+                );
                 if (userId !== myId.value) {
                     if (confirm("팔로잉하시겠습니까?")) {
                         axios

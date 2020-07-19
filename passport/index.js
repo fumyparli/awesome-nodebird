@@ -10,7 +10,21 @@ module.exports = (passport) => {
     });
 
     passport.deserializeUser((id, done) => {
-        User.findOne({ where: { id } })
+        User.findOne({
+            where: { id },
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "nick"],
+                    as: "Followers",
+                },
+                {
+                    model: User,
+                    attributes: ["id", "nick"],
+                    as: "Followings",
+                },
+            ],
+        })
             // 1 -> others info -> req.user 요청 올 때 마다 실행
             // user.id를 DB조회 후 req.user로
             .then((user) => done(null, user))
