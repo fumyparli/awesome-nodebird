@@ -15,7 +15,8 @@ router.use((req, res, next) => {
 
 // profile page
 router.get("/profile", isLoggedIn, (req, res) => {
-    res.render("profile", { title: "my profile - NodeBird", user: null });
+    console.log("req.user: ",req.user);
+    res.render("profile", { title: "my profile - NodeBird", user: req.user });
 });
 
 // sign up page

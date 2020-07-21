@@ -45,7 +45,10 @@
             <div class="twit-author">{{twit.user.nick}}</div>
             {% if not followerIdList.includes(twit.user.id) and twit.user.id !==
             user.id %}
-            <button class="twit-follow">팔로우하기</button>
+            <button class="twit-follow">팔로잉하기</button>
+            {% elif followerIdList.includes(twit.user.id) and twit.user.id !==
+            user.id %}
+            <button class="twit-unfollow">팔로잉끊기</button>
             {% endif %}
             <div class="twit-content">{{twit.content}}</div>
             {% if twit.img %}
@@ -89,6 +92,31 @@
                     if (confirm("팔로잉하시겠습니까?")) {
                         axios
                             .post(`/user/${userId}/follow`)
+                            .then(() => {
+                                location.reload();
+                            })
+                            .catch((err) => {
+                                console.error(err);
+                            });
+                    }
+                }
+            }
+        });
+    });
+    // 팔로우 끊기
+    document.querySelectorAll(".twit-unfollow").forEach(function (tag) {
+        tag.addEventListener("click", function () {
+            const myId = document.querySelector("#my-id");
+            if (!myId) {
+                alert("Login needed");
+            } else {
+                const userId = parseInt(
+                    tag.parentNode.querySelector(".twit-user-id").value
+                );
+                if (userId !== parseInt(myId.value)) {
+                    if (confirm("팔로잉을 끊으시겠습니까?")) {
+                        axios
+                            .post(`/user/${userId}/unfollow`)
                             .then(() => {
                                 location.reload();
                             })

@@ -1,16 +1,25 @@
 {% extends 'layout.html' %} {% block content %}
 <div class="timeline">
-    <div class="followings half">
-        <h2>팔로잉 목록</h2>
-        {% if user.Followings %} {% for following in user.Followings %}
-        <div>{{following.nick}}</div>
-        {% endfor %} {% endif %}
-    </div>
-    <div class="followers half">
-        <h2>팔로워 목록</h2>
-        {% if user.Followers %} {% for follower in user.Followers %}
-        <div>{{follower.nick}}</div>
-        {% endfor %} {% endif %}
-    </div>
+  <div class="followings half2">
+    <h2 class="mother-list">팔로잉 목록</h2>
+    {% if user.Followings %} {% for following in user.Followings %}
+    <div class="list">{{following.nick}}</div>
+    {% endfor %} {% endif %}
+  </div>
+  <div class="followers half2">
+    <h2 class="mother-list">팔로워 목록</h2>
+    {% if user.Followers %} {% for follower in user.Followers %}
+    <div class="list">{{follower.nick}}</div>
+    {% endfor %} {% endif %}
+  </div>
+  <form class="profile-form" method="post" action="/user/profile">
+    <input name="nick" id="input-box" />
+    <button class="btn">
+      닉네임 수정
+    </button>
+  </form>
 </div>
 {% endblock %}
+<!--form 으로 전송하면 닉네임 중복검사 같은 경우 서버에서 flag를 줘서 1이면
+    alert주고 0이면 reload하고 그런게 안됨 이 방법 꼭 찾아서 수정하기 실제로
+    서비스할 때 중요할 듯-->

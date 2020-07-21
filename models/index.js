@@ -4,10 +4,10 @@ const config = require("../config/config")[env];
 const db = {};
 
 const sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
+  config.database,
+  config.username,
+  config.password,
+  config
 );
 
 db.sequelize = sequelize;
@@ -24,14 +24,14 @@ db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" });
 db.Hashtag.belongsToMany(db.Post, { through: "PostHashtag" });
 // two case is same
 db.User.belongsToMany(db.User, {
-    through: "Follow",
-    as: "Followers",
-    foreignKey: "followingId",
+  through: "Follow",
+  as: "Followers",
+  foreignKey: "followingId",
 });
 db.User.belongsToMany(db.User, {
-    through: "Follow",
-    as: "Followings",
-    foreignKey: "followerId",
+  through: "Follow",
+  as: "Followings",
+  foreignKey: "followerId",
 });
 
 db.User.belongsToMany(db.Post, { through: "Like" });
