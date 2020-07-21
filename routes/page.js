@@ -49,7 +49,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/hashtag", async (req, res, next) => {
-    const query = req.query.hashtag;
+    const query = req.query.hashtag.replace(/\s/gi, "");
     // front에서 query 어떻게 날리는지 모르겠다.
     if (!query) {
         return res.redirect("/");

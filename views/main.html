@@ -78,12 +78,14 @@
     }
     document.querySelectorAll(".twit-follow").forEach(function (tag) {
         tag.addEventListener("click", function () {
-            const myId = document.querySelector("#my-id").value;
-            if (myId) {
+            const myId = document.querySelector("#my-id");
+            if (!myId) {
+                alert("Login needed");
+            } else {
                 const userId = parseInt(
                     tag.parentNode.querySelector(".twit-user-id").value
                 );
-                if (userId !== myId.value) {
+                if (userId !== parseInt(myId.value)) {
                     if (confirm("팔로잉하시겠습니까?")) {
                         axios
                             .post(`/user/${userId}/follow`)

@@ -45,12 +45,31 @@ router.post("/", isLoggedIn, upload2.none(), async (req, res, next) => {
         });
         const hashtags = req.body.content.match(/#\s*[^\s|#]*\s*/g);
         if (hashtags) {
-            const hashtags2 = await Promise.all(
-                hashtags.map((a) => {
-                    return a.replace(/\s/gi, "");
+            let hashtags2;
+            // async await 이용
+            function removingSpace() {
+                return new Promise((resolve, reject) => {
+                    hashtags2 = hashtags.map((a) => {
+                        return a.replace(/\s/gi, "");
+                    });
+                    resolve();
+                });
+            }
+            (async () => {
+                await removingSpace();
+                console.log("hashtags: ", hashtags2);
+            })(); // 즉시 실행 함수
+
+            /* callback함수 이용
+            function removingSpace(callBack){
+                hashtags2=hashtags.map((a)=>{
+                    return a.replace(/\s/gi,"");
                 })
-            );
-            console.log("hashtags:  ", hashtags2);
+                callBack();
+            }
+            removingSpace(()=>console.log("hashtags: ",hashtags2));
+            */
+
             const result = await Promise.all(
                 hashtags2.map((tag) => {
                     return Hashtag.findOrCreate({
