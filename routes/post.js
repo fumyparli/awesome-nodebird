@@ -27,8 +27,6 @@ const upload = multer({
 });
 
 router.post("/img", isLoggedIn, upload.single("img"), (req, res) => {
-    console.log("왜안찍혀씨발: ", req.file);
-    console.log("왜안찍혀씨발2: ", req.files);
     res.json({ url: `/img/${req.file.filename}` });
 });
 // single() 안의 img는 input tag의 id='img'
@@ -87,10 +85,47 @@ router.post("/", isLoggedIn, upload2.none(), async (req, res, next) => {
         next(error);
     }
 });
-
 // req.user
 // 이걸 그냥 쓸 수 있는게 아니라 deserializeUser가
 // id를 통해 db조회해서 전체 User정보를 불러와서 쓸 수 있는 것
 // 라우터에 걸림 -> deserializeUser실행 -> 완전한 유저정보 req.user에 저장
 
+router.post("/:id/like", isLoggedIn, async (req, res, next) => {
+    try {
+        const post = await Post.findOne({ where: { id: req.params.id } });
+        await post.addLiker(req.user.id);
+        res.send("success");
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete("/:id/like", async (req, res, next) => {
+    try {
+        const post = await Post.findOne({ where: { id: req.params.id } });
+        await post.removeLiker(req.user.id);
+        res.send("success");
+    } catch {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete("/:id", async (req, res, next) => {
+    try {
+        await Post.destroy({
+            where: { id: req.params.id, userId: req.user.id },
+            force: true,
+        });
+        console.log("req.params.id: ", req.params.id);
+        console.log("POST: ", Post);
+        res.send("success");
+        // 서버쪽에서 요청받은거 다 지워버리면 안되기 때문에 항상
+        // 추가적으로 확인(userId: req.user.id) 자기가 쓴 게시물인지
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
 module.exports = router;

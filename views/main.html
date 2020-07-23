@@ -53,6 +53,14 @@
             <div class="twit-content">{{twit.content}}</div>
             {% if twit.img %}
             <div class="twit-img"><img src="{{twit.img}}" alt="섬네일" /></div>
+            {% endif %} {% set like = 0 %} {% for i in twit.Liker %} {% if i.id
+            == user.id %} {% set like = 1 %} {% endif %} {% endfor %} {% if like
+            == 0 %}
+            <button class="twit-like">좋아요</button>
+            {% else %}
+            <button class="twit-unlike">좋아요 취소</button>
+            {% endif %} {% if user and user.id == twit.user.id %}
+            <button class="delete-button">게시글 삭제</button>
             {% endif %}
         </div>
         {% endfor %}
@@ -124,6 +132,66 @@
                                 console.error(err);
                             });
                     }
+                }
+            }
+        });
+    });
+    // 좋아요, 좋아요 취소
+    document.querySelectorAll(".twit-like").forEach(function (like) {
+        like.addEventListener("click", function () {
+            const myId = document.querySelector("#my-id");
+            const twitId = like.parentNode.querySelector(".twit-id").value;
+            console.log("twitId: ", twitId);
+            if (!myId) {
+                alert("Login needed");
+            } else {
+                axios
+                    .post(`/post/${twitId}/like`)
+                    .then(() => {
+                        location.reload();
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            }
+        });
+    });
+    document.querySelectorAll(".twit-unlike").forEach(function (like) {
+        like.addEventListener("click", function () {
+            const myId = document.querySelector("#my-id");
+            const twitId = like.parentNode.querySelector(".twit-id").value;
+            if (!myId) {
+                alert("Login needed");
+            } else {
+                axios
+                    .delete(`/post/${twitId}/like`)
+                    .then(() => {
+                        location.reload();
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            }
+        });
+    });
+    // 게시글 삭제
+    document.querySelectorAll(".delete-button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const myId = document.querySelector("#my-id");
+            const userId = btn.parentNode.querySelector(".twit-user-id").value;
+            const twitId = btn.parentNode.querySelector(".twit-id").value;
+            // 헷갈리면 안됨 userId는 게시물 주인의 id twitId는 게시물의 id
+            if (userId === myId.value) {
+                console.log("userId: ", userId, "twitId: ", twitId);
+                if (confirm("정말 삭제하시겠습니까?")) {
+                    axios
+                        .delete(`/post/${twitId}`)
+                        .then(() => {
+                            location.reload();
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
                 }
             }
         });

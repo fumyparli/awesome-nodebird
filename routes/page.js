@@ -2,6 +2,7 @@ const express = require("express");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const { Post, User, Hashtag } = require("../models");
 const router = express.Router();
+const nunjucks = require("nunjucks");
 
 router.use((req, res, next) => {
     res.locals.user = req.user;
@@ -15,7 +16,7 @@ router.use((req, res, next) => {
 
 // profile page
 router.get("/profile", isLoggedIn, (req, res) => {
-    console.log("req.user: ",req.user);
+    console.log("liker: ", req);
     res.render("profile", { title: "my profile - NodeBird", user: req.user });
 });
 
@@ -31,12 +32,21 @@ router.get("/join", isNotLoggedIn, (req, res) => {
 router.get("/", (req, res, next) => {
     // 찾아서 게시물 rendering
     Post.findAll({
-        include: {
-            model: User,
-            attributes: ["id", "nick"],
-        },
+        include: [
+            {
+                model: User,
+                attributes: ["id", "nick"],
+                order: ["createdAt", "DESC"],
+            },
+            {
+                model: User,
+                attributes: ["id", "nick"],
+                as: "Liker",
+            },
+        ],
     })
         .then((posts) => {
+            console.log("posts: ", posts);
             res.render("main", {
                 title: "NodeBird",
                 twits: posts,

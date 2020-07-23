@@ -22,7 +22,6 @@ module.exports = (passport) => {
                         if (result) {
                             done(null, exUser);
                         } else {
-                            console.log("dont에서 걸렸습니다");
                             done(null, false, {
                                 message:
                                     "The combination of email and password does not match",
