@@ -25,6 +25,13 @@ nunjucks.configure("views", {
     watch: true,
 });
 
+if (process.env.NODE_ENV === "production") {
+    app.use(morgan("combined"));
+} else {
+    // development
+    app.use(morgan("dev"));
+}
+
 app.use(morgan("dev"));
 app.use("/", express.static(path.join(__dirname, "public"))); // '/'생략가능
 app.use("/img", express.static(path.join(__dirname, "uploads")));
