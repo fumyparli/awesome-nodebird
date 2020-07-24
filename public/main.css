@@ -150,12 +150,6 @@ textarea {
     font-weight: bold;
     margin-right: 10px;
 }
-.twit-follow {
-    color: blue;
-}
-.twit-unfollow {
-    color: crimson;
-}
 .twit-follow,
 .twit-unfollow {
     padding: 1px 5px;
@@ -164,6 +158,12 @@ textarea {
     border-radius: 5px;
     font-size: 12px;
     cursor: pointer;
+}
+.twit-follow {
+    color: blue;
+}
+.twit-unfollow {
+    color: red;
 }
 .twit-img {
     text-align: center;
@@ -222,10 +222,10 @@ footer {
     color: fuchsia;
 }
 .twit-unlike {
-    color: tomato;
+    color: yellowgreen;
 }
 .delete-button {
-    color: cadetblue;
+    color: indigo;
     display: flex;
     justify-content: flex-end;
 }

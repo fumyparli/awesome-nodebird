@@ -116,7 +116,7 @@ router.delete("/:id", async (req, res, next) => {
     try {
         await Post.destroy({
             where: { id: req.params.id, userId: req.user.id },
-            force: true,
+            // force: true, 만약 이 옵션주면 DB에서 삭제 됨
         });
         console.log("req.params.id: ", req.params.id);
         console.log("POST: ", Post);
