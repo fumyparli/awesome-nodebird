@@ -4,12 +4,12 @@ const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
 const nunjucks = require("nunjucks");
+const dotenv = require("dotenv");
 const passport = require("passport");
 const helmet = require("helmet");
 const hpp = require("hpp");
-//const redis = reuqire("redis");
-//const RedisStore = require("connect-redis")(session);
-require("dotenv").config(); // 비번안전하게
+dotenv.config(); // 비번안전하게
+// 일단 redis랑 pm2에서 cluster기능 뺀다.
 
 const indexRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
@@ -58,7 +58,6 @@ if (process.env.NODE_ENV === "production") {
 // 윈도우의 경우 nvm으로 노드랑 npm 버전을 바꿀 수 있다.
 // 사이트가서 다운로드하고 설치해야 됨 그리고 나서 nvm install latest
 // 이런식으로 쉽게 업데이트 가능
-app.use(morgan("dev"));
 app.use("/", express.static(path.join(__dirname, "public"))); // '/'생략가능
 app.use("/img", express.static(path.join(__dirname, "uploads")));
 // 해커가 서버에서 경로를 쉽게 추적하지 못하도록 서버에선 uploads파일이지만
@@ -68,22 +67,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-/*const sessionOption = {
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-        httpOnly: true,
-        secure: false,
-    },
-    store: new RedisStore({
-        // redis db에 세션저장
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
-        pass: process.env.REDIS_PASSWORD,
-        logErrors: true,
-    }),
-};*/
 app.use(
     session({
         resave: false,
@@ -95,11 +78,10 @@ app.use(
         },
     })
 );
-/*if (process.env.NODE_ENV === "production") {
-    sessionOption.proxy = true;
+if (process.env.NODE_ENV === "production") {
+    session.proxy = true;
     // session.cookie.secure=true; <-- https 옵션
-}*/
-//app.use(session(sessionOption));
+}
 app.use(passport.initialize());
 app.use(passport.session());
 

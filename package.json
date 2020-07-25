@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon app",
-        "start": "cross-env NODE_ENV=production PORT=80 pm2 start app.js -i -2"
+        "start": "cross-env NODE_ENV=production PORT=80 pm2 start app.js -i 0"
     },
     "author": "fumyparli",
     "license": "MIT",
@@ -28,7 +28,6 @@
         "passport-kakao": "^1.0.0",
         "passport-local": "^1.0.0",
         "pm2": "^4.4.0",
-        "redis": "^3.0.2",
         "sequelize": "^6.3.3",
         "winston": "^3.3.0"
     },
